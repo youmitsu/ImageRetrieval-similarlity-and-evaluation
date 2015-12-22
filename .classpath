@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="D:/downloads/Lire-0.9.5/Lire-0.9.5/lire.jar" sourcepath="D:/downloads/Lire-0.9.5/Lire-0.9.5/src">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/downloads/Lire-0.9.5/Lire-0.9.5/src/main/docs/developer-docs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/downloads/Lire-0.9.5/Lire-0.9.5/lib/lucene-core-4.10.2.jar"/>
+	<classpathentry kind="lib" path="D:/downloads/Lire-0.9.5/Lire-0.9.5/lib/opencv-249.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
