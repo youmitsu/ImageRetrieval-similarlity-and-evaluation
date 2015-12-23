@@ -1,78 +1,93 @@
 package imageRetrieve;
 
+import java.applet.Applet;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
 
-public class Test {
+public class Test extends Applet {
 	BufferedImage imgA;
 	double aveR_A, aveG_A, aveB_A;
 	LinkedList<BufferedImage> imgsB = new LinkedList<BufferedImage>();
-    ArrayList<Double> similarities = new ArrayList<Double>();
-	
-	public static void main(String[] args) {
-		new Test().start();
-	}
+	ArrayList<Double> similarities = new ArrayList<Double>();
+	HashMap<Double, BufferedImage> files = new HashMap<Double, BufferedImage>();
+	BufferedImage[] resultImages = new BufferedImage[10];
 
-	public void start() {
+	public void init() {
 		readImgA(new File("image1.jpg"));
 		readImgB(new File("3flower"));
 		RGB aveRGB_A = getRGB(imgA);
 		aveR_A = aveRGB_A.r;
 		aveG_A = aveRGB_A.g;
 		aveB_A = aveRGB_A.b;
-		while(!imgsB.isEmpty()){
+		while (!imgsB.isEmpty()) {
 			BufferedImage imgB = imgsB.getFirst();
 			RGB aveRGB_B = getRGB(imgB);
-			calcSimilarity(aveRGB_B);
-		    imgsB.remove();
+			double similarity = calcSimilarity(aveRGB_B);
+			files.put(similarity, imgB);
+			imgsB.remove();
 		}
+		calcHighSimilarities();
 	}
-	
-	public RGB getRGB(BufferedImage img){
+
+	public RGB getRGB(BufferedImage img) {
 		int width = img.getWidth();
 		int height = img.getHeight();
-		int allPixels = width*height;
+		int allPixels = width * height;
 		Point p;
 		int clr, red, green, blue;
-		double aveR = 0; 
-		double aveG = 0; 
+		double aveR = 0;
+		double aveG = 0;
 		double aveB = 0;
-		//画像AのRGB取得とRGBごとの平均値の算出
-		for(int i = 0; i < height;i++){
-			for(int j = 0; j < width; j++){
+		// 画像AのRGB取得とRGBごとの平均値の算出
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
 				p = new Point(j, i);
-				clr = img.getRGB(j,i);
+				clr = img.getRGB(j, i);
 				red = (clr & 0x00ff0000) >> 16;
-			    green = (clr & 0x0000ff00) >> 8;
-			    blue = clr & 0x000000ff;
-			    aveR += red;
-			    aveG += green;
-			    aveB += blue;
+				green = (clr & 0x0000ff00) >> 8;
+				blue = clr & 0x000000ff;
+				aveR += red;
+				aveG += green;
+				aveB += blue;
 			}
 		}
 		aveR /= allPixels;
 		aveG /= allPixels;
 		aveB /= allPixels;
-		
+
 		return new RGB(aveR, aveG, aveB);
 	}
-	
-	public void calcSimilarity(RGB c){
+
+	public double calcSimilarity(RGB c) {
 		double aveR_B = c.r;
 		double aveG_B = c.g;
 		double aveB_B = c.b;
-		double a = Math.sqrt((aveR_A-aveR_B)*(aveR_A-aveR_B)
-				+(aveG_A-aveG_B)*(aveG_A-aveG_B)+(aveB_A-aveB_B)*(aveB_A-aveB_B));
-		double b = Math.sqrt(3*255-0);
-		double similarity = a/b*100;
-		System.out.println(similarity);
+		double a = Math.sqrt((aveR_A - aveR_B) * (aveR_A - aveR_B)
+				+ (aveG_A - aveG_B) * (aveG_A - aveG_B) + (aveB_A - aveB_B)
+				* (aveB_A - aveB_B));
+		double b = Math.sqrt(3 * 255 - 0);
+		double similarity = a / b * 100;
+		// System.out.println(similarity);
 		similarities.add(similarity);
+		return similarity;
+
+	}
+
+	public void calcHighSimilarities() {
+		Collections.sort(similarities);
+		for (int i = 0; i < resultImages.length; i++) {
+			System.out.println(similarities.get(similarities.size()-1-i));
+			resultImages[i] = files.get(similarities.get(similarities.size()-1-i));
+		}
 	}
 
 	public void readImgA(File file) {
@@ -103,5 +118,19 @@ public class Test {
 				}
 			}
 		}
+	}
+
+	public void paint(Graphics g) {
+		g.drawImage(imgA, 0, 0, 210, 140, this);
+		int i = 0;
+		for (BufferedImage img : resultImages) {
+			if (i < 5) {
+				g.drawImage(img, 0+210*i, 190, 210, 140, this);
+			} else {
+				g.drawImage(img, 0+210*(i-5), 380, 210, 140, this);
+			}
+			i++;
+		}
+
 	}
 }
