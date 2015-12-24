@@ -28,7 +28,9 @@ public class Test extends Applet {
 		aveR_A = aveRGB_A.r;
 		aveG_A = aveRGB_A.g;
 		aveB_A = aveRGB_A.b;
+		int count = 0;
 		while (!imgsB.isEmpty()) {
+			count++;
 			BufferedImage imgB = imgsB.getFirst();
 			RGB aveRGB_B = getRGB(imgB);
 			double similarity = calcSimilarity(aveRGB_B);
@@ -36,6 +38,7 @@ public class Test extends Applet {
 			imgsB.remove();
 		}
 		calcHighSimilarities();
+		System.out.println(count);
 	}
 
 	public RGB getRGB(BufferedImage img) {
