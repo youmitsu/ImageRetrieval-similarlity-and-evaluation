@@ -23,7 +23,7 @@ public class Test extends Applet {
 
 	public void init() {
 		readImgA(new File("image1.jpg"));
-		readImgB(new File("3flower"));
+		readImgB(new File("resources"));
 		RGB aveRGB_A = getRGB(imgA);
 		aveR_A = aveRGB_A.r;
 		aveG_A = aveRGB_A.g;
@@ -47,7 +47,7 @@ public class Test extends Applet {
 		double aveR = 0;
 		double aveG = 0;
 		double aveB = 0;
-		// 画像AのRGB取得とRGBごとの平均値の算出
+		// 画像のRGB取得とRGBごとの平均値の算出
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				p = new Point(j, i);
@@ -71,10 +71,10 @@ public class Test extends Applet {
 		double aveR_B = c.r;
 		double aveG_B = c.g;
 		double aveB_B = c.b;
-		double a = Math.sqrt((aveR_A - aveR_B) * (aveR_A - aveR_B)
-				+ (aveG_A - aveG_B) * (aveG_A - aveG_B) + (aveB_A - aveB_B)
-				* (aveB_A - aveB_B));
-		double b = Math.sqrt(3 * 255 - 0);
+		double a = Math.sqrt(((aveR_A - aveR_B) * (aveR_A - aveR_B))
+				+ ((aveG_A - aveG_B) * (aveG_A - aveG_B))
+				+ ((aveB_A - aveB_B) * (aveB_A - aveB_B)));
+		double b = Math.sqrt(3 * ((255 - 0) * (255 - 0)));
 		double similarity = a / b * 100;
 		// System.out.println(similarity);
 		similarities.add(similarity);
@@ -85,8 +85,8 @@ public class Test extends Applet {
 	public void calcHighSimilarities() {
 		Collections.sort(similarities);
 		for (int i = 0; i < resultImages.length; i++) {
-			System.out.println(similarities.get(similarities.size()-1-i));
-			resultImages[i] = files.get(similarities.get(similarities.size()-1-i));
+			System.out.println(similarities.get(i));
+			resultImages[i] = files.get(similarities.get(i));
 		}
 	}
 
@@ -125,9 +125,9 @@ public class Test extends Applet {
 		int i = 0;
 		for (BufferedImage img : resultImages) {
 			if (i < 5) {
-				g.drawImage(img, 0+210*i, 190, 210, 140, this);
+				g.drawImage(img, 0 + 210 * i, 190, 210, 140, this);
 			} else {
-				g.drawImage(img, 0+210*(i-5), 380, 210, 140, this);
+				g.drawImage(img, 0 + 210 * (i - 5), 380, 210, 140, this);
 			}
 			i++;
 		}
